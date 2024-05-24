@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+    app:
+        build: .
+        volumes:
+            -  .:/var/www/html:uid=1001,gid=1001
+        networks:
+            - laravel_network
+
+    nginx:
+        image: nginx:alpine
+        ports:
+            - "127.0.0.1:8080:80"
+        volumes:
+            - ./nginx.conf:/etc/nginx/conf.d/default.conf
+        depends_on:
+            - app
+        networks:
+            - laravel_network
+
+    blackfire:
+        image: blackfire/blackfire:2
+        environment:
+            - BLACKFIRE_SERVER_ID=your_server_id
+            - BLACKFIRE_SERVER_TOKEN=your_server_token
+        networks:
+            - laravel_network
+
+networks:
+    laravel_network:
+        name: laravel_network
