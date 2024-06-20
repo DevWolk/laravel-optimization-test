@@ -22,8 +22,14 @@ services:
     blackfire:
         image: blackfire/blackfire:2
         environment:
-            - BLACKFIRE_SERVER_ID=your_server_id
-            - BLACKFIRE_SERVER_TOKEN=your_server_token
+            # Exposes BLACKFIRE_SERVER_* environment variables from the host:
+            BLACKFIRE_SERVER_ID:
+            BLACKFIRE_SERVER_TOKEN:
+
+            # Exposes BLACKFIRE_CLIENT_* environment variables
+            # allowing the client to communicate with Blackfire's API:
+            BLACKFIRE_CLIENT_ID:
+            BLACKFIRE_CLIENT_TOKEN:
         networks:
             - laravel_network
 
