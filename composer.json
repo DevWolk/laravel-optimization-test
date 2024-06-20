@@ -6,9 +6,15 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "laravel/framework": "^11.0",
+        "laravel/framework": "dev-reflection-optimization as v11.10.0",
         "laravel/tinker": "^2.9"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/sarven/laravel"
+        }
+    ],
     "require-dev": {
         "fakerphp/faker": "^1.23",
         "laravel/pint": "^1.13",
