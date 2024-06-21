@@ -14,22 +14,6 @@ final class AppProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->resolving(static function (mixed $class, Application $app): void {
-            if (false === is_string($class)) {
-                $class = get_class($class);
-            }
-
-            if (false === $class) {
-                return;
-            }
-
-            if ($app->isShared($class)) {
-                return;
-            }
-
-            ResolvedServices::count($class);
-        });
-
         $this->app->when(Shared::class)
             ->needs('$val')
             ->give('val1');
