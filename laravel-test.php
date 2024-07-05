@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 use App\Services\RootService;
 use App\Services\RootService2;
-use Illuminate\Container\ClassDefinition\ClassDefinitionProvider;
 use Illuminate\Contracts\Http\Kernel;
 
-require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/laravel/vendor/autoload.php';
 
 $count = 200;
 $data = [];
 
 for ($i = 0; $i < $count; $i++) {
-    $app = require __DIR__.'/bootstrap/app.php';
+    $app = require __DIR__ . '/laravel/bootstrap/app.php';
     $app->make(Kernel::class)->bootstrap();
 
     $start = microtime(true);

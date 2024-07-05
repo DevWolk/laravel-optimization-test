@@ -2,25 +2,22 @@
 
 How to start?
 ```
-rm -rf vendor
-rm composer.lock
-php composer.phar install
-php test.php
+rm -rf laravel/vendor
+rm laravel/composer.lock
+cd laravel && php composer.phar install
+cd .. && php laravel-test.php
 ```
 
 
-## Before changes
-### branch: master
+## Laravel
 
 ```
 "19.366332292557 ms" // test.php:38
 "20.48 KB" // test.php:39
 ```
 
-### After changes
-### branch: reflection-optimization
+### Symfony
 
 ```
-"15.390226840973 ms" // test.php:38
-"10.24 KB" // test.php:39
+TBD
 ```
