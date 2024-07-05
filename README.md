@@ -2,10 +2,13 @@
 
 How to start?
 ```
-rm -rf laravel/vendor
-rm laravel/composer.lock
 cd laravel && php composer.phar install
 cd .. && php laravel-test.php
+```
+
+```
+cd symfony && php composer.phar install
+cd .. && php symfony-test.php
 ```
 
 
@@ -19,5 +22,6 @@ cd .. && php laravel-test.php
 ### Symfony
 
 ```
-TBD
+"0.017472505569458 ms"
+"10.24 KB"
 ```
