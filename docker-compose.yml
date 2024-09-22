@@ -1,38 +1,158 @@
-version: '3.8'
-
+name: laravel-optimization-test
 services:
-    app:
-        build: .
-        volumes:
-            -  .:/var/www/html:uid=1001,gid=1001
-        networks:
-            - laravel_network
-
-    nginx:
-        image: nginx:alpine
-        ports:
-            - "127.0.0.1:8080:80"
-        volumes:
-            - ./nginx.conf:/etc/nginx/conf.d/default.conf
-        depends_on:
-            - app
-        networks:
-            - laravel_network
-
-    blackfire:
-        image: blackfire/blackfire:2
-        environment:
-            # Exposes BLACKFIRE_SERVER_* environment variables from the host:
-            BLACKFIRE_SERVER_ID:
-            BLACKFIRE_SERVER_TOKEN:
-
-            # Exposes BLACKFIRE_CLIENT_* environment variables
-            # allowing the client to communicate with Blackfire's API:
-            BLACKFIRE_CLIENT_ID:
-            BLACKFIRE_CLIENT_TOKEN:
-        networks:
-            - laravel_network
-
+  blackfire:
+    environment:
+      BLACKFIRE_CLIENT_ID: ""
+      BLACKFIRE_CLIENT_TOKEN: ""
+      BLACKFIRE_SERVER_ID: ""
+      BLACKFIRE_SERVER_TOKEN: ""
+    image: blackfire/blackfire:2
+    networks:
+      app_network: null
+  laravel_app:
+    build:
+      context: /home/ubuntu/projects/laravel-optimization-test/laravel
+      dockerfile: Dockerfile
+    container_name: laravel_app
+    depends_on:
+      laravel_db:
+        condition: service_started
+        required: true
+    deploy:
+      resources:
+        limits:
+          cpus: 0.99
+          memory: "2147483648"
+    networks:
+      app_network: null
+    ports:
+      - mode: ingress
+        target: 9000
+        published: "9000"
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: /home/ubuntu/projects/laravel-optimization-test/laravel
+        target: /var/www/html
+        bind:
+          create_host_path: true
+  laravel_db:
+    container_name: laravel_db
+    deploy:
+      resources:
+        limits:
+          cpus: 0.99
+          memory: "2147483648"
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_USER: root
+      MYSQL_USER: user
+    image: mysql:8.0
+    networks:
+      app_network: null
+    ports:
+      - mode: ingress
+        target: 3306
+        published: "3306"
+        protocol: tcp
+    volumes:
+      - type: volume
+        source: laravel_db_data
+        target: /var/lib/mysql
+        volume: {}
+  nginx:
+    container_name: nginx
+    depends_on:
+      laravel_app:
+        condition: service_started
+        required: true
+      symfony_app:
+        condition: service_started
+        required: true
+    image: nginx:alpine
+    networks:
+      app_network: null
+    ports:
+      - mode: ingress
+        target: 80
+        published: "8080"
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: /home/ubuntu/projects/laravel-optimization-test/nginx.conf
+        target: /etc/nginx/conf.d/default.conf
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /home/ubuntu/projects/laravel-optimization-test/laravel/public
+        target: /var/www/laravel
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /home/ubuntu/projects/laravel-optimization-test/symfony/public
+        target: /var/www/symfony
+        bind:
+          create_host_path: true
+  symfony_app:
+    build:
+      context: /home/ubuntu/projects/laravel-optimization-test/symfony
+      dockerfile: Dockerfile
+    container_name: symfony_app
+    depends_on:
+      symfony_db:
+        condition: service_started
+        required: true
+    deploy:
+      resources:
+        limits:
+          cpus: 0.99
+          memory: "2147483648"
+    networks:
+      app_network: null
+    ports:
+      - mode: ingress
+        target: 9000
+        published: "9001"
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: /home/ubuntu/projects/laravel-optimization-test/symfony
+        target: /var/www/html
+        bind:
+          create_host_path: true
+  symfony_db:
+    container_name: symfony_db
+    deploy:
+      resources:
+        limits:
+          cpus: 0.99
+          memory: "2147483648"
+    environment:
+      MYSQL_DATABASE: symfony
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_USER: root
+      MYSQL_USER: user
+    image: mysql:8.0
+    networks:
+      app_network: null
+    ports:
+      - mode: ingress
+        target: 3306
+        published: "3307"
+        protocol: tcp
+    volumes:
+      - type: volume
+        source: symfony_db_data
+        target: /var/lib/mysql
+        volume: {}
 networks:
-    laravel_network:
-        name: laravel_network
+  app_network:
+    name: app_network
+volumes:
+  laravel_db_data:
+    name: laravel-optimization-test_laravel_db_data
+  symfony_db_data:
+    name: laravel-optimization-test_symfony_db_data

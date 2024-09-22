@@ -1,0 +1,41 @@
+services:
+  symfony_app:
+    build: ./symfony
+    container_name: symfony_app
+    volumes:
+      - ./symfony:/var/www/html
+    ports:
+      - "9001:9000"
+    depends_on:
+      - symfony_db
+    networks:
+      - app_network
+    deploy:
+      resources:
+        limits:
+          cpus: "0.99"
+          memory: 2GB
+
+  symfony_db:
+    image: mysql:8.0
+    container_name: symfony_db
+    environment:
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: symfony
+      MYSQL_USER: user
+      MYSQL_PASSWORD: secret
+    volumes:
+      - symfony_db_data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    networks:
+      - app_network
+    deploy:
+      resources:
+        limits:
+          cpus: "0.99"
+          memory: 2GB
+
+volumes:
+  symfony_db_data:

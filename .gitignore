@@ -1,2 +1,5 @@
+/.fleet
 /.idea
+/.vscode
 .DS_Store
+docker-compose.yml
