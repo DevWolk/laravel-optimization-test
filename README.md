@@ -42,7 +42,7 @@ Average memory: 0.00 KB
 
 With auto-wiring enabled:
 ```
-Average time: 10.496410 ms
+Average time: 0.004305 ms
 Average memory: 0.00 KB
 ```
 
