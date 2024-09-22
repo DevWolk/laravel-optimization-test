@@ -7,7 +7,6 @@ namespace App\Providers;
 use App\Services\Shared;
 use App\Services\Shared2;
 use App\Services\Shared3;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 final class AppProvider extends ServiceProvider
@@ -23,5 +22,11 @@ final class AppProvider extends ServiceProvider
         $this->app->when(Shared3::class)
             ->needs('$val')
             ->give('val3');
+
+        if ($this->app['config']->get('app.auto-wiring')) {
+            $this->app->scoped(Shared::class, Shared::class);
+            $this->app->scoped(Shared2::class, Shared2::class);
+            $this->app->scoped(Shared3::class, Shared3::class);
+        }
     }
 }

@@ -34,8 +34,15 @@ This project compares the performance of Laravel and Symfony frameworks using Do
 
 ### Laravel
 
+With auto-wiring disabled:
 ```
 Average time: 19.374376 ms
+Average memory: 0.00 KB
+```
+
+With auto-wiring enabled:
+```
+Average time: 10.496410 ms
 Average memory: 0.00 KB
 ```
 
@@ -57,6 +64,14 @@ Average memory: 0.00 KB
 
 - The tests measure the time and memory usage for creating instances of `RootService` and `RootService2`.
 - Each test is run 200 times and the average is calculated.
+- Laravel's performance can be significantly improved by enabling auto-wiring for shared services.
+
+## Auto-wiring in Laravel
+
+To enable auto-wiring for shared services in Laravel:
+
+1. Set `APP_AUTO_WIRING=true` in the `.env` file.
+2. The `AppProvider` will automatically register shared services when auto-wiring is enabled.
 
 ## References
 

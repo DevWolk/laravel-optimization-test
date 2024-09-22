@@ -123,4 +123,5 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'auto-wiring' => env('APP_AUTO_WIRING', false),
 ];
